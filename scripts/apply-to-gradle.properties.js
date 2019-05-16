@@ -22,9 +22,11 @@ function run() {
         throw("Failed to load dependencies: " + e.toString());
     }
 
-    if (!fs.existsSync(gradlePropertiesPath)) {
+    try {
+        fs.accessSync(gradlePropertiesPath, fs.constants.F_OK);
+    } catch (doesNotExist) {
         fs.closeSync(fs.openSync(gradlePropertiesPath, 'w'));
-        log("gradle.properties file not found, created empty one!")
+        log("gradle.properties file not found, created empty one!");
     }
 
     var gradleProperties = fs.readFileSync(gradlePropertiesPath);
